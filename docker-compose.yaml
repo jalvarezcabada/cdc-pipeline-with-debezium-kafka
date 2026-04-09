@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   flink-jobmanager:
     build:
@@ -10,6 +8,7 @@ services:
     command: jobmanager
     volumes:
       - ./src:/opt/flink/src
+      - flink-checkpoints:/opt/flink/checkpoints
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jobmanager
@@ -21,6 +20,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: taskmanager
+    volumes:
+      - flink-checkpoints:/opt/flink/checkpoints
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jobmanager
@@ -103,6 +104,9 @@ services:
       - kafka
     networks:
       - app-network
+
+volumes:
+  flink-checkpoints:
 
 networks:
   app-network:

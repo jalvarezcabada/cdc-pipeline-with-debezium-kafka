@@ -1,6 +1,6 @@
-# CDC Pipeline: PostgreSQL - Debezium - Kafka
+# CDC Pipeline: PostgreSQL - Debezium - Kafka - Flink
 
-This project sets up a Change Data Capture (CDC) pipeline that streams data changes from PostgreSQL to Kafka using Debezium. The pipeline ensures that any changes in PostgreSQL tables are captured and sent to Kafka topics in real-time.
+This project sets up a Change Data Capture (CDC) pipeline that streams data changes from PostgreSQL to Kafka using Debezium, and processes them in real-time with Apache Flink using windowed aggregations.
 
 ## Project Overview
 
@@ -18,12 +18,13 @@ Below is a visual representation of the CDC pipeline:
 
 ## Quickstart Commands
 
-1. **Start the Docker Containers**
+1. **Build and start the Docker Containers**
 
-   Bring up all services (PostgreSQL, Kafka, Zookeeper, Debezium, and Kafka UI):
+   Build the custom Flink image and bring up all services (PostgreSQL, Kafka, Zookeeper, Debezium, Kafka UI, and Flink):
 
    ```bash
-   docker-compose up -d
+   docker compose build
+   docker compose up -d
    ```
 
 2. **Configure the Debezium Connector**

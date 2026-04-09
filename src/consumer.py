@@ -4,6 +4,9 @@ env_settings = EnvironmentSettings.in_streaming_mode()
 t_env = TableEnvironment.create(env_settings)
 
 t_env.get_config().set("table.exec.source.idle-timeout", "5000")
+t_env.get_config().set("execution.checkpointing.interval", "30s")
+t_env.get_config().set("execution.checkpointing.mode", "EXACTLY_ONCE")
+t_env.get_config().set("state.checkpoints.dir", "file:///opt/flink/checkpoints")
 
 t_env.execute_sql("""
     CREATE TABLE orders_cdc (
@@ -19,8 +22,9 @@ t_env.execute_sql("""
         'connector' = 'kafka',
         'topic' = 'debezium.public.orders',
         'properties.bootstrap.servers' = 'kafka:9092',
-        'properties.group.id' = 'pyflink-cdc-group-v3',
-        'scan.startup.mode' = 'earliest-offset',
+        'properties.group.id' = 'pyflink-cdc-group',
+        'properties.enable.auto.commit' = 'true',
+        'scan.startup.mode' = 'group-offsets',
         'format' = 'json',
         'json.ignore-parse-errors' = 'true'
     )

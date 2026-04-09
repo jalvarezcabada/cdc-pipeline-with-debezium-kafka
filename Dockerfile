@@ -8,6 +8,8 @@ RUN apt-get update && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     apt-get clean
 
+RUN mkdir -p /opt/flink/checkpoints && chown -R flink:flink /opt/flink/checkpoints
+
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
 
 COPY requirements.txt /tmp/requirements.txt
