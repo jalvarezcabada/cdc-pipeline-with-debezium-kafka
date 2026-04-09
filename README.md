@@ -33,6 +33,5 @@ Below is a visual representation of the CDC pipeline:
     curl -X POST -H "Content-Type: application/json" --data @connector.json http://localhost:8083/connectors
     ```
 
-    This will initialize th
-    e CDC pipeline, with data changes from PostgreSQL being streamed to Kafka.
+    This will initialize the CDC pipeline, with data changes from PostgreSQL being streamed to Kafka.
 
