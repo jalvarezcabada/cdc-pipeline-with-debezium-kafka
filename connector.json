@@ -13,6 +13,7 @@
       "signal.enabled.channels": "source,kafka",
       "signal.kafka.topic": "signal-topic",
       "signal.kafka.bootstrap.servers": "kafka:9092",
-      "plugin.name": "pgoutput"
+      "plugin.name": "pgoutput",
+      "decimal.handling.mode": "string"
     }
 }

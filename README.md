@@ -8,6 +8,7 @@ The setup includes:
 - **PostgreSQL**: The source database where data changes are captured.
 - **Debezium**: A CDC tool that captures changes from PostgreSQL and publishes them to Kafka.
 - **Kafka**: Acts as the data streaming platform, receiving and holding data from Debezium for downstream consumers.
+- **Flink**: Stream processing engine that consumes events from Kafka and applies windowed aggregations.
 
 ## Architecture Diagram
 
@@ -34,4 +35,48 @@ Below is a visual representation of the CDC pipeline:
     ```
 
     This will initialize the CDC pipeline, with data changes from PostgreSQL being streamed to Kafka.
+
+3. **Create the orders table and insert sample data**
+
+    ```bash
+    docker compose exec postgres psql -U postgres -c "
+    CREATE TABLE orders (
+      id SERIAL PRIMARY KEY,
+      customer_name VARCHAR(100),
+      product VARCHAR(100),
+      quantity INT,
+      total DECIMAL(10,2),
+      status VARCHAR(20) DEFAULT 'pending',
+      created_at TIMESTAMP DEFAULT now()
+    );
+
+    INSERT INTO orders (customer_name, product, quantity, total) VALUES
+      ('Juan', 'Laptop', 1, 1500.00),
+      ('Maria', 'Mouse', 2, 50.00),
+      ('Pedro', 'Teclado', 1, 80.00);
+    "
+    ```
+
+4. **Submit the Flink job**
+
+    ```bash
+    docker compose exec flink-jobmanager ./bin/flink run -py /opt/flink/src/consumer.py
+    ```
+
+    The job will appear in the Flink UI at `http://localhost:8081`.
+
+5. **Watch the Flink output**
+
+    ```bash
+    docker compose logs -f flink-taskmanager
+    ```
+
+6. **Generate new events**
+
+    Insert, update or delete rows in PostgreSQL to see them processed by Flink:
+
+    ```bash
+    docker compose exec postgres psql -U postgres -c \
+      "INSERT INTO orders (customer_name, product, quantity, total) VALUES ('Ana', 'Monitor', 1, 300.00);"
+    ```
 
